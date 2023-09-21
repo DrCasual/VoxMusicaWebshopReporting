@@ -1,3 +1,6 @@
 pandas
 pyarrow
 requests
+requests_oauthlib
+openpyxl
+db-sqlite3
