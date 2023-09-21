@@ -1,0 +1,5 @@
+{
+    "WC_API_BASE_URL": "https://voxmusica.be/wp-json/wc/v3",
+    "WC_API_CLIENT_KEY": "ck_aaaf7b8bfcf60351e113a92bdcb1dec6856249d7",
+    "WC_API_CLIENT_SECRET": "cs_e7786f441ead880898217bad28e9bb44eb9a3a59"
+}
