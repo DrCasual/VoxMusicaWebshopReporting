@@ -28,7 +28,7 @@ class WooCommerceClient:
             _ = [res.append(x) for x in data]
             page += 1
 
-        return pd.DataFrame(res)
+        return pd.DataFrame(res) 
 
 
 if __name__ == "__main__":

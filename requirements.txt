@@ -4,3 +4,4 @@ requests
 requests_oauthlib
 openpyxl
 db-sqlite3
+openpyxl

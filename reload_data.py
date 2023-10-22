@@ -1,5 +1,8 @@
-from WooCommerceClient import WooCommerceClient
+import pandas as pd
 import sqlite3
+
+from datetime import datetime, timedelta
+from WooCommerceClient import WooCommerceClient
 
 
 con = sqlite3.connect("./webshop-vox.db")
@@ -50,10 +53,25 @@ def stage_orders():
 def rebuild_db():
     sql("DROP TABLE Orders;")
     sql("DROP TABLE Products;")
-    setup_db()    
+    setup_db()   
+    
+    
+def create_date_dimension(year):
+    start_date = datetime(year, 1, 1)
+    end_date = datetime(year, 12, 31)
+    date_list = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+
+    date_dimension = pd.DataFrame({'Date': date_list})
+    date_dimension['Year'] = date_dimension['Date'].dt.year
+    date_dimension['Month'] = date_dimension['Date'].dt.month
+    date_dimension['Day'] = date_dimension['Date'].dt.day
+    date_dimension['DayOfWeek'] = date_dimension['Date'].dt.dayofweek  # Monday is 0, Sunday is 6
+
+    return date_dimension 
     
 if __name__ == "__main__":
     stage_orders()
+    # create_date_dimension(2023).to_sql("dim_date", con, index=False, if_exists='replace')
     # stage_products()
     # stage_orders()
     
