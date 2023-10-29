@@ -1,3 +1,4 @@
+-- DROP VIEW V_OrderOverview;
 CREATE VIEW V_OrderOverview AS
 SELECT BestelNummer,
       MIN(Voornaam) AS Voornaam,
@@ -6,6 +7,8 @@ SELECT BestelNummer,
       MIN(TelefoonNummer) AS TelefoonNummer,
       MIN(BestelStatus) AS BestelStatus,
       MIN(BetaalMethode) AS BetaalMethode,
+      MIN(DatumBesteld) AS DatumBesteld,
+      MIN(DatumBetaald) AS DatumBetaald,
       MIN(Totaal) AS Totaal,
       SUM(AantalTicketsRoeselare) AS AantalTicketsRoeselare,
       SUM(AantalTicketsBeselare) AS AantalTicketsBeselare
@@ -17,6 +20,8 @@ FROM (
                   o.client_phone AS TelefoonNummer,
                   o.Status AS BestelStatus,
                   o.payment_method_title AS BetaalMethode,
+                  o.date_created AS DatumBesteld,
+                  o.date_paid AS DatumBetaald,
                   o.total AS Totaal,
                   oli.quantity,
                   CASE
