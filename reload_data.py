@@ -45,6 +45,7 @@ def stage_orders():
     df_order_line_items["product_id"] = col_order_line_items.apply(lambda x: x["product_id"])
     df_order_line_items["quantity"] = col_order_line_items.apply(lambda x: x["quantity"])
     df_order_line_items["total"] = col_order_line_items.apply(lambda x: x["total"])
+    df_order_line_items["metadata"] = col_order_line_items.apply(lambda x: str(x["meta_data"]))
     df_order_line_items.drop("line_items", inplace=True, axis=1)
     df_order_line_items.to_sql("order_line_items", con, index=False, if_exists='replace')
     # df.to_sql("orders", con, index=False, if_exists="replace")
@@ -68,11 +69,10 @@ def create_date_dimension(year):
     date_dimension['DayOfWeek'] = date_dimension['Date'].dt.dayofweek  # Monday is 0, Sunday is 6
 
     return date_dimension 
+
+def main():
+    stage_products()
+    stage_orders() 
     
 if __name__ == "__main__":
-    stage_orders()
-    # create_date_dimension(2023).to_sql("dim_date", con, index=False, if_exists='replace')
-    # stage_products()
-    # stage_orders()
-    
-
+    main()
