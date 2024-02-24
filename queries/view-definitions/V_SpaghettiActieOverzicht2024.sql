@@ -10,6 +10,7 @@ SELECT
     MIN(o.total)                                                            AS `TotaalBedrag`,
     MIN(o.payment_method_title)                                             AS `BetaalMethode`,
     CASE WHEN MIN(o.status) = "processing" THEN "JA" ELSE "NEE" END         AS `BetalingOK`,
+    MIN(o.status)                                                           AS `BestelStatus`,
 
     /*CLIENT INFO*/
     MIN(o.client_first_name)                                                AS `Voornaam`,
