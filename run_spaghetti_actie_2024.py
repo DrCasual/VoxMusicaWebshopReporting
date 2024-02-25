@@ -2,7 +2,7 @@ import logging
 import sqlite3
 
 import reload_data
-import spaghetti_order_line_items_formatted
+import spaghetti_2024_order_line_items_formatted
 import data_override
 
 from materialize_view import materialize_view
@@ -23,7 +23,7 @@ if __name__ == "__main__":
     logging.info("Data overriding done!")
     
     logging.info("Transforming data...")
-    spaghetti_order_line_items_formatted.main()
+    spaghetti_2024_order_line_items_formatted.main()
     logging.info("Data transformations done!")
     
     logging.info("Materializing view")

@@ -1,14 +1,13 @@
 /*DROP IF CHANGED; SEMI MANUAL; SQLITE Can't handle 2 statements in a script for some reason...*/
--- DROP VIEW IF EXISTS V_SpaghettiActieOverzicht2024; 
+-- DROP VIEW IF EXISTS V_SpaghettiActieOverzicht2023; 
 
-CREATE VIEW V_SpaghettiActieOverzicht2024
+CREATE VIEW V_SpaghettiActieOverzicht2023
 AS
 SELECT 
     /*ORDER INFO*/
     MIN(o.id)                                                               AS `BestelNummer`,
     MIN(o.date_created)                                                     AS `BestelDatum`,
     MIN(o.total)                                                            AS `TotaalBedrag`,
-    MIN(o.payment_method_title)                                             AS `BetaalMethode`,
     MIN(o.payment_method_title)                                             AS `BetaalMethode`,
     CASE WHEN MIN(o.status) IN ("processing", "completed") 
         THEN "JA" 
@@ -37,7 +36,7 @@ SELECT
     
 FROM orders AS o 
 
-INNER JOIN spaghetti_2024_order_line_items_formatted AS oli
+INNER JOIN spaghetti_2023_order_line_items_formatted AS oli
 ON o.id = oli.order_id
 
 GROUP BY o.id
