@@ -9,7 +9,6 @@ SELECT
     MIN(o.date_created)                                                     AS `BestelDatum`,
     MIN(o.total)                                                            AS `TotaalBedrag`,
     MIN(o.payment_method_title)                                             AS `BetaalMethode`,
-    MIN(o.payment_method_title)                                             AS `BetaalMethode`,
     CASE WHEN MIN(o.status) IN ("processing", "completed") 
         THEN "JA" 
         ELSE "NEE" 

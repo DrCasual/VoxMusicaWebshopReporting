@@ -1,48 +1,76 @@
 import logging
 import sqlite3
+
 import pandas as pd
 
 logging.basicConfig(level=logging.INFO)
 DEBUG_MODE = False
 
+
 def override_order_johana(con):
     """
     Johana Delgrado Bestelling nr 1089
-    WAS: 10l bolognese, 1l carbonara
-    WORDT: 9l bolognese, 1l carbonara, 1l veggie
+    Extra items erbij:
+        - 1x veggie 1l
+        - 3x carbonara 1l
     """
     cur = con.cursor()
-    
-    # update existing line item
+
+    # insert order record
     cur.execute(
         """
-        UPDATE `order_line_items`
-        SET `quantity` = 9
-        WHERE `order_id` = 1089
-        AND `line_item_id` = 1078;
+        INSERT INTO `orders`
+        SELECT `id` * -1 AS `id`
+             , "on-hold" AS `status`
+             , "2024-02-26T21:50:09" AS `date_created`
+             , "2024-02-26T21:50:09" AS `date_modified`
+             , "45.00" AS `total`
+             , "cash" AS `payment_method_title`
+             , NULL AS `transaction_id`
+             , NULL AS `date_paid`
+             , `client_first_name`
+             , `client_last_name`
+             , `client_email`
+             , `client_phone`
+        FROM orders
+        WHERE id = 1089
         """
     )
-    
-    # add new line item (id's == -1; no tracability in system possible)
+
+    # insert order lines
+    # 1x veggie 1l
+    # 2x carbonara 1l
     cur.execute(
         """
         INSERT INTO `order_line_items`
-        SELECT `order_id`
-            , -1 AS `line_item_id`
-            , `name`
-            , `product_id`
-            , 1 AS `quantity`
-            , 0 AS total -- zetten we op 0
-            , "[{'id': -1, 'key': '1l-saus', 'value': 'Veggie', 'display_key': '1L saus', 'display_value': 'Veggie'}]" AS metadata
+        SELECT `order_id` * -1  AS `order_id`
+             , -1               AS `line_item_id`
+             , `name`
+             , `product_id`
+             , 1                AS `quantity`
+             , 15               AS total
+             , "[{'id': -1, 'key': '1l-saus', 'value': 'Veggie', 'display_key': '1L saus', 'display_value': 'Veggie'}]" AS metadata
+        FROM order_line_items
+        WHERE order_id = 1089
+        AND line_item_id = 1078
+
+        UNION ALL
+
+        SELECT `order_id` * -1  AS `order_id`
+             , -2               AS `line_item_id`
+             , `name`
+             , `product_id`
+             , 2                AS `quantity`
+             , 30               AS total
+             , "[{'id': -1, 'key': '1l-saus', 'value': 'Carbonara', 'display_key': '1L saus', 'display_value': 'Carbonara'}]" AS metadata
         FROM order_line_items
         WHERE order_id = 1089
         AND line_item_id = 1078
         """
     )
-    
+
     # persist result && close connection
-    if not DEBUG_MODE:
-        con.commit()
+    con.commit()
     cur.close()
 
 
@@ -51,9 +79,13 @@ def main():
     logging.info("Running function override_order_johana...")
     override_order_johana(con)
     logging.info("function override_order_johana done!")
-    
+
     logging.info("Validation res:")
-    print(pd.read_sql_query("SELECT * FROM order_line_items WHERE order_id = 1089", con).head(10))
+    print(
+        pd.read_sql_query(
+            "SELECT * FROM order_line_items WHERE order_id = -1089", con
+        ).head(10)
+    )
 
 
 if __name__ == "__main__":
